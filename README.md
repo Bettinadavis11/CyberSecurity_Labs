@@ -23,9 +23,15 @@ Welcome to my Cybersecurity repository! This repository is a collection of hands
 17. [Netcat's Many Uses](#netcats-many-uses)
 
 # Network Investigation
+In this lab you I will analyze network evidence from a simulated compromise.
+The scenario used in this lab is continued in the two labs that follow (Memory Investigation, and Malware Investigation). In these labs I will examine additional evidence (memory images and malware) from the same compromise, making sure that precise notes are taken since I will be using them in future labs.
 
+While I analyze these files, I will try to answer the following questions:
 
-
+*   What systems are likely compromised in the organization?
+*   When did the threat actors begin their attack?
+*   What host(s) are the threat actors using for command and control (C2)?
+  
 # Memory Investigation
 
 
