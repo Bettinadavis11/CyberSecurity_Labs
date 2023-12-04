@@ -25,11 +25,11 @@ $ head access.log 1584606106.376 71 172.16.42.108 TAG_NONE/200 0 CONNECT 151.101
 ```
 $ grep midnitemeerkats access.log 1584648356.572 175 172.16.42.107 TCP_MISS/301 671 GET http://www.midnitemeerkats.com/note - ORIGINAL_DST/69.163.156.144 text/html 1584648359.613 2018 172.16.42.107 TCP_MISS/301 461 GET https://www.midnitemeerkats.com/note - ORIGINAL_DST/69.163.156.144 text/html 1584648360.761 569 172.16.42.107 TCP_MISS/200 4404 GET https://midnitemeerkats.com/note/ - ORIGINAL_DST/69.163.156.144 text/html 1584648360.983 51 172.16.42.107 TCP_MISS/200 1873 GET https://midnitemeerkats.com/wp-content/plugins/memberpress/css/ui/theme.css? - ORIGINAL_DST/69.163.156.144 text/css
 ```
-### The Squid log output features multiple fields separated by spaces. We're interested in three key fields: request time (first), requesting client (third), and requested URL (seventh). To extract these, use the provided awk command.
+The Squid log output features multiple fields separated by spaces. We're interested in three key fields: request time (first), requesting client (third), and requested URL (seventh). To extract these, use the provided awk command.
 ```
 $ awk '/midnitemeerkats/ {print $1, $3, $7}' access.log 1584648356.572 172.16.42.107 http://www.midnitemeerkats.com/note 1584648359.613 172.16.42.107 https://www.midnitemeerkats.com/note 1584648360.761 172.16.42.107 https://midnitemeerkats.com/note/ 1584648360.983 172.16.42.107 https://midnitemeerkats.com/wp-content/plugins/memberpress/css/ui/theme.css?
 ```
-### The trimmed output is clearer than the original log, yet the timestamp is in POSIX time format, counting seconds since January 1st, 1970, 00:00:00 UTC. Squid logs append millisecond resolution to the timestamp. To present POSIX time in a human-readable format, employ the awk strftime function as illustrated here:
+The trimmed output is clearer than the original log, yet the timestamp is in POSIX time format, counting seconds since January 1st, 1970, 00:00:00 UTC. Squid logs append millisecond resolution to the timestamp. To present POSIX time in a human-readable format, employ the awk strftime function as illustrated here:
 $ sec504@slingshot:/labs/falsimentis$ TZ=America/Los_Angeles awk '/midnitemeerkats/ {print strftime("%T", $1), $3, $7}' access.log
 13:05:56 172.16.42.107 http://www.midnitemeerkats.com/note
 13:05:59 172.16.42.107 https://www.midnitemeerkats.com/note
@@ -37,7 +37,7 @@ $ sec504@slingshot:/labs/falsimentis$ TZ=America/Los_Angeles awk '/midnitemeerka
 13:06:00 172.16.42.107 https://midnitemeerkats.com/wp-content/plugins/memberpress/css/ui/theme.css?  
 
 ## Looking for Beacons in access.log
-### Check for network beacons by identifying numerous requests to the same URL at consistent time intervals. Instead of awk, utilize findbeacons.py, a tool specifically designed for locating beacons. Specify the time interval with the -i argument and set a minimum number of beacon requests using the -c argument. findbeacons.py output reveals http://www1-google-analytics.com/collect with thousands of 5-second interval packets. The URL is suspicious due to the high volume of evenly spaced requests and its similarity to the legitimate www.google-analytics.com.
+Check for network beacons by identifying numerous requests to the same URL at consistent time intervals. Instead of awk, utilize findbeacons.py, a tool specifically designed for locating beacons. Specify the time interval with the -i argument and set a minimum number of beacon requests using the -c argument. findbeacons.py output reveals http://www1-google-analytics.com/collect with thousands of 5-second interval packets. The URL is suspicious due to the high volume of evenly spaced requests and its similarity to the legitimate www.google-analytics.com.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ ./findbeacons.py  -i 5 -c 10 172.16.42.107 access.log
 Sites that had at least 10 5-second intervals
@@ -55,7 +55,7 @@ Sites that had at least 10 5-second intervals
 sec504@slingshot:~/labs/falsimentis$ 
 ```
 ## Finding more compromised hosts
-### To find additional hosts in the network that are compromised, pivot on the domain www1-google-analytics.com by searching for it in the access.log file as shown.
+To find additional hosts in the network that are compromised, pivot on the domain www1-google-analytics.com by searching for it in the access.log file as shown.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ awk '/www1-google-analytics.com/ {print $3}' access.log | sort -u
 172.16.42.103
@@ -65,13 +65,13 @@ $ sec504@slingshot:~/labs/falsimentis$ awk '/www1-google-analytics.com/ {print $
 sec504@slingshot:~/labs/falsimentis$ 
 ```
 ## Finding even more compromised hosts
-### Now, we shift focus from the access.log file, which only captures HTTP and HTTPS traffic through the proxy, potentially missing non-standard port activity. Let's pivot by examining the packet capture file. To proceed, extract the IP address of www1-google-analytics.com from the access.log file, as demonstrated here:
+Now, we shift focus from the access.log file, which only captures HTTP and HTTPS traffic through the proxy, potentially missing non-standard port activity. Let's pivot by examining the packet capture file. To proceed, extract the IP address of www1-google-analytics.com from the access.log file, as demonstrated here:
 ```
 $ sec504@slingshot:~/labs/falsimentis$ grep www1-google-analytics.com access.log | head -n 1
 1584638136.869    179 172.16.42.107 TCP_MISS/200 62808 POST http://www1-google-analytics.com/collect - ORIGINAL_DST/167.172.201.123 text/html
 sec504@slingshot:~/labs/falsimentis$ 
 ```
-### capinfos from Wireshark provides statistics on a pcap file, including capture time, packet count, and file size. Running this command allows you to examine the characteristics of the "falsimentis.pcap" file's network traffic.
+capinfos from Wireshark provides statistics on a pcap file, including capture time, packet count, and file size. Running this command allows you to examine the characteristics of the "falsimentis.pcap" file's network traffic.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ capinfos falsimentis.pcap
 File name:           falsimentis.pcap
@@ -103,8 +103,8 @@ Interface #0 info:
                      Number of packets = 5431607
 sec504@slingshot:~/labs/falsimentis$ 
 ```
-### We do not want to open this packet capture on Wireshark, as once Wireshark exceeds 250,000 to 500,000 it gets very sluggish and it is ver hard to get any answers from that utility. Instead, we are going to use TCPDump to collect information, parsing the output file with Unix command line tools here on my linux system.
-### Here we can see the IP address of www1-google-analytics.com is 167.172.201.123. Now we can search through the packet capture file falismentis.pcap for traffic destined to this IP as shown here
+We do not want to open this packet capture on Wireshark, as once Wireshark exceeds 250,000 to 500,000 it gets very sluggish and it is ver hard to get any answers from that utility. Instead, we are going to use TCPDump to collect information, parsing the output file with Unix command line tools here on my linux system.
+Here we can see the IP address of www1-google-analytics.com is 167.172.201.123. Now we can search through the packet capture file falismentis.pcap for traffic destined to this IP as shown here
 ```
 $ sec504@slingshot:~/labs/falsimentis$ tcpdump -nr falsimentis.pcap dst host 167.172.201.123 | cut -d ' ' -f 3 | cut -d '.' -f 1-4 | sort -u
 reading from file falsimentis.pcap, link-type EN10MB (Ethernet)
@@ -118,7 +118,7 @@ reading from file falsimentis.pcap, link-type EN10MB (Ethernet)
 sec504@slingshot:~/labs/falsimentis$
 ```
 ## Finding the first packet
-### To get an estimate when the malicious traffic started, we can examine the first packet that was sent from each compromised host to www1-google-analytics.com (167.172.201.123). This can be done with a for loop as shown here:
+To get an estimate when the malicious traffic started, we can examine the first packet that was sent from each compromised host to www1-google-analytics.com (167.172.201.123). This can be done with a for loop as shown here:
 ```
 $ sec504@slingshot:~/labs/falsimentis$ for octet in 2 3 103 105 107 108 109; do TZ=PST7PDT tcpdump -tttt -n -r falsimentis.pcap -c 1 "src host 172.16.42.$octet and dst host 167.172.201.123" 2>/dev/null; done
 2020-03-19 09:10:48.693390 IP 172.16.42.2.53699 > 167.172.201.123.8090: Flags [SEW], seq 141186417, win 8192, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
@@ -130,8 +130,8 @@ $ sec504@slingshot:~/labs/falsimentis$ for octet in 2 3 103 105 107 108 109; do 
 2020-03-19 09:57:04.359504 IP 172.16.42.109.64231 > 167.172.201.123.8090: Flags [S], seq 3275538513, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
 sec504@slingshot:~/labs/falsimentis$ 
 ```
-### Notice that the timestamps for these packets varies from 9:10 AM to 9:57 AM. However, these timestamps are for packets destined for port 8090, not port 80.
-### To find the first timestamp for port 80 traffic, modify the previous for loop as shown here:
+Notice that the timestamps for these packets varies from 9:10 AM to 9:57 AM. However, these timestamps are for packets destined for port 8090, not port 80.
+To find the first timestamp for port 80 traffic, modify the previous for loop as shown here:
 ```
 $ sec504@slingshot:~/labs/falsimentis$ for octet in 2 3 103 105 107 108 109; do TZ=PST7PDT tcpdump -tttt -n -r falsimentis.pcap -c 1 "src host 172.16.42.$octet and dst host 167.172.201.123 and dst port 80" 2>/dev/null; done
 2020-03-19 10:34:16.505799 IP 172.16.42.103.52458 > 167.172.201.123.80: Flags [S], seq 1388216751, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
@@ -140,7 +140,7 @@ $ sec504@slingshot:~/labs/falsimentis$ for octet in 2 3 103 105 107 108 109; do 
 2020-03-19 10:48:35.338023 IP 172.16.42.109.51040 > 167.172.201.123.80: Flags [S], seq 493181052, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
 sec504@slingshot:~/labs/falsimentis$
 ```
-### We are saving the output from the previous code into a text file "first-talker.txt" for future reference. We used ctrl+D to (end of file) to save the file.
+We are saving the output from the previous code into a text file "first-talker.txt" for future reference. We used ctrl+D to (end of file) to save the file.
 ```
 $sec504@slingshot:~/labs/falsimentis$ cat > first-talkers.txt
 2020-03-19 10:34:16.505799 IP 172.16.42.103.52458 > 167.172.201.123.80: Flags [S], seq 1388216751, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
@@ -148,7 +148,7 @@ $sec504@slingshot:~/labs/falsimentis$ cat > first-talkers.txt
 2020-03-19 10:15:36.693484 IP 172.16.42.107.60227 > 167.172.201.123.80: Flags [S], seq 2927374010, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
 2020-03-19 10:48:35.338023 IP 172.16.42.109.51040 > 167.172.201.123.80: Flags [S], seq 493181052, win 64240, options [mss 1460,nop,wscale 8,nop,nop,sackOK], length 0
 ```
-### Using the awk commmand to extract and print the second and fourth fields from each line in the "first-talkers.txt" file.
+Using the awk commmand to extract and print the second and fourth fields from each line in the "first-talkers.txt" file.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ awk '{print $2, $4}' first-talkers.txt
 10:34:16.505799 172.16.42.103.52458
@@ -156,7 +156,7 @@ $ sec504@slingshot:~/labs/falsimentis$ awk '{print $2, $4}' first-talkers.txt
 10:15:36.693484 172.16.42.107.60227
 10:48:35.338023 172.16.42.109.51040
 ```
-### This command extracts and prints the second and fourth fields from each line in "first-talkers.txt" using AWK and then sorts the output.
+This command extracts and prints the second and fourth fields from each line in "first-talkers.txt" using AWK and then sorts the output.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ awk '{print $2, $4}' first-talkers.txt | sort
 10:15:36.693484 172.16.42.107.60227
@@ -165,7 +165,7 @@ $ sec504@slingshot:~/labs/falsimentis$ awk '{print $2, $4}' first-talkers.txt | 
 10:48:35.338023 172.16.42.109.51040
 sec504@slingshot:~/labs/falsimentis$ 
 ```
-### The following iterates over a list of octets (2, 3, 103, 105, 107, 108, 109) and, for each, uses tcpdump to capture and display the timestamp, source, and destination information for one packet where the source IP is "172.16.42.$octet" and the destination is not "167.172.201.123". The -tttt option formats the output with a human-readable timestamp. Any error messages are redirected to /dev/null.
+The following iterates over a list of octets (2, 3, 103, 105, 107, 108, 109) and, for each, uses tcpdump to capture and display the timestamp, source, and destination information for one packet where the source IP is "172.16.42.$octet" and the destination is not "167.172.201.123". The -tttt option formats the output with a human-readable timestamp. Any error messages are redirected to /dev/null.
 ```
 $ sec504@slingshot:~/labs/falsimentis$ for octet in 2 3 103 105 107 108 109; do TZ=PST7PDT tcpdump -tttt -n -r falsimentis.pcap -c 1 "src host 172.16.42.$octet and not dst host 167.172.201.123" 2>/dev/null; done
 2020-03-19 01:14:42.597200 IP 172.16.42.2.54966 > 172.16.42.10.53: 58959+ [1au] A? incoming.telemetry.mozilla.org. (59)
