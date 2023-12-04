@@ -22,7 +22,7 @@ Welcome to my Cybersecurity repository! This repository is a collection of hands
 16. [Cloud Bucket Discovery](#cloud-bucket-discovery)
 17. [Netcat's Many Uses](#netcats-many-uses)
 
-# Network Investigation
+# 1. Network Investigation
 In this lab you I will analyze network evidence from a simulated compromise.
 The scenario used in this lab is continued in the two labs that follow (Memory Investigation, and Malware Investigation). In these labs I will examine additional evidence (memory images and malware) from the same compromise, making sure that precise notes are taken since I will be using them in future labs.
 
@@ -34,7 +34,7 @@ The scenario used in this lab is continued in the two labs that follow (Memory I
 ## Tools used:
 *  TCPdump
   
-# Memory Investigation
+# 2. Memory Investigation
 In this lab you will analyze memory evidence from the Falsimentis compromise. feel free to add to any notes you took during the network investigation lab with information you discover in this lab.
 
 ## Questions to answer:
@@ -46,62 +46,62 @@ In this lab you will analyze memory evidence from the Falsimentis compromise. fe
 ## Tools used:
 *  Volatility
 
-# Malware Investigation
+# 3. Malware Investigation
 
 
 
-# Cloud Investigation
+# 4. Cloud Investigation
 
 
 
-# OSINT with SpiderFoot
+# 5. OSINT with SpiderFoot
 
 
 
-# DNS Interrogation
+# 6. DNS Interrogation
 
 
 
-# NMAP
+# 7. NMAP
 
 
 
-# Cloud Scanning
+# 8. Cloud Scanning
 
 
 
-# SMB Security
+# 9. SMB Security
 
 
 
-# Windows Password Spray Attack Detection
+# 10. Windows Password Spray Attack Detection
 
 
 
-# Password Guessing Attacks with Hydra
+# 11. Password Guessing Attacks with Hydra
 
 
 
-# Password Guessing Attacks with Metasploit
+# 12. Password Guessing Attacks with Metasploit
 
 
 
-# Microsoft 365 Password Attacks
+# 13. Microsoft 365 Password Attacks
 
 
-# John the Ripper
-
-
-
-# Hashcat
+# 14. John the Ripper
 
 
 
-# Cloud Bucket Discovery
+# 15. Hashcat
 
 
 
-# Netcat's Many Uses
+# 16. Cloud Bucket Discovery
+
+
+
+# 17. Netcat's Many Uses
 
 
 
