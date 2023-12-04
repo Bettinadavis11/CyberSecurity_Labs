@@ -26,15 +26,25 @@ Welcome to my Cybersecurity repository! This repository is a collection of hands
 In this lab you I will analyze network evidence from a simulated compromise.
 The scenario used in this lab is continued in the two labs that follow (Memory Investigation, and Malware Investigation). In these labs I will examine additional evidence (memory images and malware) from the same compromise, making sure that precise notes are taken since I will be using them in future labs.
 
-While I analyze these files, I will try to answer the following questions:
-
+## While I analyze these files, I will try to answer the following questions:
 *   What systems are likely compromised in the organization?
 *   When did the threat actors begin their attack?
 *   What host(s) are the threat actors using for command and control (C2)?
+
+## Tools used:
+*  TCPdump
   
 # Memory Investigation
+In this lab you will analyze memory evidence from the Falsimentis compromise. feel free to add to any notes you took during the network investigation lab with information you discover in this lab.
 
+## Questions to answer:
+*  What is the name of the process making connections to http://www1-google-analytics.com?
+*  Where is the process located on the file system?
+*  What additional suspicious processes are there on the system?
+*  Identify an additional server used by the Midnite Meerkats
 
+## Tools used:
+*  Volatility
 
 # Malware Investigation
 
