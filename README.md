@@ -47,10 +47,15 @@ In this lab you will analyze memory evidence from the Falsimentis compromise. fe
 *  Volatility
 
 # 3. Malware Investigation
+In this lab we will continue investigating the Falsimentis incident by examining some of the malware used by the Midnite Meerkats.
 ### Questions to answer:
+* What artifacts are left by the malware installer?
+* What host(s) and port(s) does the malware installer communicate with?
+* What is the mechanism used to delete files if the ransom is not paid, and how can it be disabled?
+  
 ### Tools used:
-
-
+* Regshot
+* Procmon
 
 # 4. Cloud Investigation
 ### Questions to answer:
